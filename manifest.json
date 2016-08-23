@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+
+  "name": "Tabtervention",
+  "description": "Will someone please save me from all of these fucking tabs?",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": ["main.js"]
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "https://ajax.googleapis.com/"
+  ]
+}
