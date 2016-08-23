@@ -12,14 +12,28 @@
         font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
         font-size: 100%;
       }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 1000px;
-      }
+     #status {
+      width: 600px;
+     }
+/*     ul, 
+     ul > li {
+      display: inline-block;
+     }*/
+     .truncate {
+       width: 250px;
+       display: inline; /* Fallback for non-webkit */
+       max-width: 200px;
+       -webkit-line-clamp: 2;
+       -webkit-box-orient: vertical;
+       overflow: hidden;
+       text-overflow: ellipsis;
+     }
+
+     .aboutToExpire {
+      color: red;
+     }
     </style>
+    <script src="popup.js"></script>
     <!--
       - JavaScript and HTML must be in separate files: see our Content Security
       - Policy documentation[1] for details and explanation.
@@ -29,11 +43,13 @@
   </head>
   <body>
     <div id="status">
-      <ul id="fine"></ul>
-      <ul id="aboutToExpire"></ul>
-      <ul id="older"></ul>
+      <h2 class="aboutToExpire">About to be closed</h2>
+      <ul id="aboutToExpire" class="truncate"></ul>
+      <h2 class="older">Old</h2>
+      <ul id="older" class="truncate"></ul>
+      <h2>These Are Ok</h2>
+      <ul id="fine" class="truncate"></ul>
     </div>
-    <img id="image-result" hidden>
   </body>
 </html>
 

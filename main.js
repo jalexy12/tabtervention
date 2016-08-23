@@ -1,3 +1,7 @@
+// Todo:
+	// On Tab Open
+	// On Tab Closed
+
 // MS
 var TIME_LIMIT = 864000000
 var OLD_THRESHHOLD = 259200000
@@ -34,8 +38,9 @@ function setupTabStorage(){
 					console.log(storageObj[tab.id])
 				}
 			})
-
+			storageObj["lastPing"] = Date.now()
 			chrome.storage.local.set({tabs: storageObj}, function(){ console.log("Saved!")})
+			updateClassifiedTabs(storageObj)
 		})
 	})
 }
@@ -56,43 +61,12 @@ function checkIfOld(){
 			}
 		}
 
+		newObj["lastPing"] = Date.now()
 		chrome.storage.local.set({tabs: newObj}, function(){
 			console.log("Updated!")
 		})
-		console.log(newObj)
-		updateDomWithTabs(newObj)
 	})
 
-}
-
-function updateDomWithTabs(tabs){
-	var classified = {
-		aboutToExpire: [],
-		older: [],
-		fine: []
-	}
-
-	for (var key in tabs){
-		var currentTab = tabs[key]
-
-		if (currentTab.openFor <= FINE_THRESHHOLD){
-			classified.fine.push(currentTab)
-		} else if(currentTab.openFor > FINE_THRESHHOLD && currentTab.openFor <= OLD_THRESHHOLD){
-			classified.older.push(currentTab)
-		} else {
-			classified.aboutToExpire.push(currentTab)
-		}
-	}
-
-
-	for (var classification in classified){
-		classified[classification].forEach(function(tab){
-			var appendTo = document.getElementById(classification)
-			var newLi = document.createElement("li")
-			newLi.appendChild(document.createTextNode(tab.title))
-			appendTo.appendChild(newLi)
-		})
-	}
 }
 
 function cleanUp(){
@@ -119,3 +93,4 @@ chrome.runtime.onConnect.addListener(function(){
 	console.log("Connected...?")
 })
 
+init()
