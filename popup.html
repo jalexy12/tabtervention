@@ -17,7 +17,7 @@
         white-space: pre;
         text-overflow: ellipsis;
         overflow: hidden;
-        max-width: 400px;
+        max-width: 1000px;
       }
     </style>
     <!--
@@ -28,7 +28,11 @@
      -->
   </head>
   <body>
-    <div id="status">Help</div>
+    <div id="status">
+      <ul id="fine"></ul>
+      <ul id="aboutToExpire"></ul>
+      <ul id="older"></ul>
+    </div>
     <img id="image-result" hidden>
   </body>
 </html>

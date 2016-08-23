@@ -10,12 +10,13 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["main.js"]
+    "scripts": ["moment.js", "main.js"]
   },
   "permissions": [
     "activeTab",
     "tabs",
     "storage",
+    "alarms",
     "https://ajax.googleapis.com/"
   ]
 }
