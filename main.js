@@ -1,11 +1,35 @@
 // Todo:
 	// On Tab Open
-	// On Tab Closed
 
 // MS
 var TIME_LIMIT = 864000000
 var OLD_THRESHHOLD = 259200000
 var FINE_THRESHHOLD = 86400000
+
+// On Tab Closed
+
+chrome.tabs.onRemoved.addListener(function(tabId, res){
+	updateTabStorage(tabId);
+})
+
+function updateTabStorage(tabId){
+	chrome.storage.local.get("tabs", function(res){
+		var tabList = res.tabs
+
+		// Use this to check count before deletion
+		// alert("before: " + Object.keys(tabList).length);
+		for (var key in tabList) {
+			if (tabId == key) {
+				// Removes element by key
+				delete tabList[key];
+			}
+		}
+
+		// Use this to check count after deletion
+		// alert("after: " + Object.keys(tabList).length);
+		chrome.storage.local.set({tabs: tabList}, function(){ alert("Saved!")})
+	})
+}
 
 function setupTabStorage(){
 	chrome.storage.local.get("tabs", function(res){
@@ -31,8 +55,8 @@ function setupTabStorage(){
 				} else {
 					console.log("Doesnt have tab", tab)
 					storageObj[tab.id] = {
-						title: tab.title, 
-						opened: (new Date()).getTime(), 
+						title: tab.title,
+						opened: (new Date()).getTime(),
 						openFor: 0
 					}
 					console.log(storageObj[tab.id])
@@ -55,7 +79,7 @@ function checkIfOld(){
 				newObj[key] = res.tabs[key]
 				var opened = newObj[key].opened
 				var current = (new Date()).getTime()
-				newObj[key].openFor = current - opened				
+				newObj[key].openFor = current - opened
 			} else {
 				console.log("Time To Close...", res.tabs[key])
 				chrome.tabs.remove(res.tabs[key].id, function(){
