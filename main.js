@@ -58,6 +58,10 @@ function checkIfOld(){
 				newObj[key].openFor = current - opened				
 			} else {
 				console.log("Time To Close...", res.tabs[key])
+				chrome.tabs.remove(res.tabs[key].id, function(){
+					console.log("Removed Tab")
+				})
+
 			}
 		}
 
