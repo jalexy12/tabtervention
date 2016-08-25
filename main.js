@@ -1,18 +1,41 @@
 // Todo:
-	// On Tab Open
 
 // MS
 var TIME_LIMIT = 864000000
 var OLD_THRESHHOLD = 259200000
 var FINE_THRESHHOLD = 86400000
 
-// On Tab Closed
-
-chrome.tabs.onRemoved.addListener(function(tabId, res){
-	updateTabStorage(tabId);
+// On Tab Open
+chrome.tabs.onCreated.addListener(function(tab){
+	var tabOpenedOn = (new Date()).getTime()
+	var tabId = tab.id;
+	var tabTitle = tab.title;
+	addToTabStorage(tabId, tabTitle, tabOpenedOn)
 })
 
-function updateTabStorage(tabId){
+function addToTabStorage(tabId, tabTitle, tabOpenedOn){
+	chrome.storage.local.get("tabs", function(res){
+		var tabList = res.tabs;
+		var current = (new Date()).getTime();
+		var diff = current - tabOpenedOn;
+
+		// Adds new tab to the list of tabs
+		tabList[tabId] = {
+			title: tabTitle,
+			opened: tabOpenedOn,
+			openFor: diff
+		}
+
+		chrome.storage.local.set({tabs: tabList}, function(){ console.log("Saved!")})
+	})
+}
+
+// On Tab Closed
+chrome.tabs.onRemoved.addListener(function(tabId, res){
+	removeFromTabStorage(tabId);
+})
+
+function removeFromTabStorage(tabId){
 	chrome.storage.local.get("tabs", function(res){
 		var tabList = res.tabs
 
@@ -27,10 +50,12 @@ function updateTabStorage(tabId){
 
 		// Use this to check count after deletion
 		// alert("after: " + Object.keys(tabList).length);
-		chrome.storage.local.set({tabs: tabList}, function(){ alert("Saved!")})
+		chrome.storage.local.set({tabs: tabList}, function(){ console.log("Saved!")})
 	})
 }
 
+
+// Tab storage setup
 function setupTabStorage(){
 	chrome.storage.local.get("tabs", function(res){
 		var storageObj = res.tabs || {}
