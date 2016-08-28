@@ -2,8 +2,8 @@
 
 // MS
 var TIME_LIMIT = 864000000
-var OLD_THRESHHOLD = 259200000
-var FINE_THRESHHOLD = 86400000
+var OLD_THRESHOLD = 259200000
+var FINE_THRESHOLD = 86400000
 
 // On Tab Open
 chrome.tabs.onCreated.addListener(function(tab){
@@ -87,9 +87,9 @@ function setupTabStorage(){
 					console.log(storageObj[tab.id])
 				}
 			})
-			storageObj["lastPing"] = Date.now()
+			// storageObj["lastPing"] = Date.now()
 			chrome.storage.local.set({tabs: storageObj}, function(){ console.log("Saved!")})
-			updateClassifiedTabs(storageObj)
+			// updateClassifiedTabs(storageObj)
 		})
 	})
 }
@@ -98,7 +98,6 @@ function checkIfOld(){
 
 	chrome.storage.local.get("tabs", function(res){
 		var newObj = {}
-
 		for (var key in res.tabs) {
 			if (Number(res.tabs[key].openFor) < TIME_LIMIT){
 				newObj[key] = res.tabs[key]
@@ -107,14 +106,15 @@ function checkIfOld(){
 				newObj[key].openFor = current - opened
 			} else {
 				console.log("Time To Close...", res.tabs[key])
-				chrome.tabs.remove(res.tabs[key].id, function(){
+				// Convert the key to an integer before passing it to the remove function
+				chrome.tabs.remove(Number(key), function(){
 					console.log("Removed Tab")
 				})
 
 			}
 		}
 
-		newObj["lastPing"] = Date.now()
+		// newObj["lastPing"] = Date.now()
 		chrome.storage.local.set({tabs: newObj}, function(){
 			console.log("Updated!")
 		})

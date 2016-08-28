@@ -1,5 +1,5 @@
-var OLD_THRESHHOLD = 259200000
-var FINE_THRESHHOLD = 86400000
+var OLD_THRESHOLD = 259200000
+var FINE_THRESHOLD = 86400000
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
   for (key in changes) {
@@ -20,13 +20,13 @@ document.addEventListener("DOMContentLoaded", function(){
 			older: [],
 			fine: []
 		}
-		
+
 		for (var key in res.tabs){
 			var currentTab = res.tabs[key]
 
-			if (currentTab.openFor <= FINE_THRESHHOLD){
+			if (currentTab.openFor <= FINE_THRESHOLD){
 				classified.fine.push(currentTab)
-			} else if(currentTab.openFor > FINE_THRESHHOLD && currentTab.openFor <= OLD_THRESHHOLD){
+			} else if(currentTab.openFor > FINE_THRESHOLD && currentTab.openFor <= OLD_THRESHOLD){
 				classified.older.push(currentTab)
 			} else {
 				classified.aboutToExpire.push(currentTab)
